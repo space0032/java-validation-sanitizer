@@ -235,4 +235,30 @@ class ValidatorIntegrationTest {
         assertEquals("john_doe_123", result.getSanitizedValue("username"));
         assertEquals("user@example.com", result.getSanitizedValue("email"));
     }
+
+    @Test
+    void testTypeSafeGetSanitizedValue() {
+        ValidationResult result = Validator.create()
+            .field("username", "  JohnDoe  ")
+                .sanitize(Sanitizers.trim())
+                .validate(Validators.notBlank())
+            .field("age", (Number) 25)
+                .validate(Validators.notNull())
+            .execute();
+
+        assertTrue(result.isValid());
+        
+        // Test type-safe method with correct type
+        java.util.Optional<String> username = result.getSanitizedValue("username", String.class);
+        assertTrue(username.isPresent());
+        assertEquals("JohnDoe", username.get());
+        
+        // Test type-safe method with incorrect type
+        java.util.Optional<Integer> wrongType = result.getSanitizedValue("username", Integer.class);
+        assertFalse(wrongType.isPresent());
+        
+        // Test type-safe method with non-existent field
+        java.util.Optional<String> missing = result.getSanitizedValue("nonexistent", String.class);
+        assertFalse(missing.isPresent());
+    }
 }

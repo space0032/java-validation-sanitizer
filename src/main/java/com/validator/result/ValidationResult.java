@@ -67,6 +67,22 @@ public class ValidationResult {
     }
 
     /**
+     * Gets a sanitized value for a specific field with type checking.
+     * 
+     * @param fieldName the field name
+     * @param type the expected class type
+     * @param <T> the expected type
+     * @return Optional containing the sanitized value if found and type matches, empty otherwise
+     */
+    public <T> java.util.Optional<T> getSanitizedValue(String fieldName, Class<T> type) {
+        Object value = sanitizedValues.get(fieldName);
+        if (value != null && type.isInstance(value)) {
+            return java.util.Optional.of(type.cast(value));
+        }
+        return java.util.Optional.empty();
+    }
+
+    /**
      * Gets a combined error message with all validation errors.
      * 
      * @return combined error message

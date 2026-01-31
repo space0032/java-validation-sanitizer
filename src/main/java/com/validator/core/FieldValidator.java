@@ -46,6 +46,7 @@ public class FieldValidator<T> {
      * @param rule the sanitization rule
      * @return this field validator for chaining
      */
+    @SuppressWarnings("unchecked")
     public FieldValidator<T> sanitize(SanitizerRule rule) {
         if (value instanceof String) {
             value = (T) rule.sanitize((String) value);

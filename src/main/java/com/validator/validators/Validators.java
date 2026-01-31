@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class Validators {
 
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-        "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+        "^[A-Za-z0-9+_]+(\\.[A-Za-z0-9+_]+)*@[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)*\\.[A-Za-z]{2,}$"
     );
 
     private static final Pattern URL_PATTERN = Pattern.compile(
@@ -38,6 +38,10 @@ public class Validators {
     private static final Pattern PHONE_PATTERN = Pattern.compile(
         "^[+]?[(]?[0-9]{1,4}[)]?[-\\s.()0-9]*[0-9]$"
     );
+
+    private static final Pattern ALPHA_PATTERN = Pattern.compile("^[a-zA-Z]+$");
+    private static final Pattern ALPHANUMERIC_PATTERN = Pattern.compile("^[a-zA-Z0-9]+$");
+    private static final Pattern NUMERIC_PATTERN = Pattern.compile("^[0-9]+$");
 
     /**
      * Validates that value is not null.
@@ -92,8 +96,12 @@ public class Validators {
      */
     public static ValidatorRule<String> isUrl() {
         return (fieldName, value) -> {
-            if (value != null && !URL_PATTERN.matcher(value).matches()) {
-                return new ValidationError(fieldName, "must be a valid URL", "isUrl", value);
+            if (value != null) {
+                try {
+                    new java.net.URL(value).toURI();
+                } catch (java.net.MalformedURLException | java.net.URISyntaxException e) {
+                    return new ValidationError(fieldName, "must be a valid URL", "isUrl", value);
+                }
             }
             return null;
         };
@@ -116,7 +124,20 @@ public class Validators {
      */
     public static ValidatorRule<String> isIpAddress() {
         return (fieldName, value) -> {
-            if (value != null && !IPV4_PATTERN.matcher(value).matches() && !IPV6_PATTERN.matcher(value).matches()) {
+            if (value != null) {
+                // Try IPv4 first
+                if (IPV4_PATTERN.matcher(value).matches()) {
+                    return null;
+                }
+                // Try parsing as IPv6 using InetAddress
+                try {
+                    java.net.InetAddress addr = java.net.InetAddress.getByName(value);
+                    if (addr instanceof java.net.Inet6Address) {
+                        return null;
+                    }
+                } catch (java.net.UnknownHostException e) {
+                    // Fall through to error
+                }
                 return new ValidationError(fieldName, "must be a valid IP address", "isIpAddress", value);
             }
             return null;
@@ -225,7 +246,7 @@ public class Validators {
      */
     public static ValidatorRule<String> isAlpha() {
         return (fieldName, value) -> {
-            if (value != null && !value.matches("^[a-zA-Z]+$")) {
+            if (value != null && !ALPHA_PATTERN.matcher(value).matches()) {
                 return new ValidationError(fieldName, "must contain only alphabetic characters", "isAlpha", value);
             }
             return null;
@@ -237,7 +258,7 @@ public class Validators {
      */
     public static ValidatorRule<String> isAlphanumeric() {
         return (fieldName, value) -> {
-            if (value != null && !value.matches("^[a-zA-Z0-9]+$")) {
+            if (value != null && !ALPHANUMERIC_PATTERN.matcher(value).matches()) {
                 return new ValidationError(fieldName, "must contain only alphanumeric characters", "isAlphanumeric", value);
             }
             return null;
@@ -249,7 +270,7 @@ public class Validators {
      */
     public static ValidatorRule<String> isNumeric() {
         return (fieldName, value) -> {
-            if (value != null && !value.matches("^[0-9]+$")) {
+            if (value != null && !NUMERIC_PATTERN.matcher(value).matches()) {
                 return new ValidationError(fieldName, "must contain only numeric characters", "isNumeric", value);
             }
             return null;
