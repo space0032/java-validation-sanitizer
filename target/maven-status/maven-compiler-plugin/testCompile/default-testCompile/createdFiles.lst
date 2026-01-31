@@ -1,0 +1,3 @@
+com/validator/sanitizers/SanitizersTest.class
+com/validator/core/ValidatorIntegrationTest.class
+com/validator/validators/ValidatorsTest.class
