@@ -1,4 +1,0 @@
--------------------------------------------------------------------------------
-Test set: com.validator.core.ValidatorIntegrationTest
--------------------------------------------------------------------------------
-Tests run: 14, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.028 s - in com.validator.core.ValidatorIntegrationTest
