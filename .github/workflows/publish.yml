@@ -48,6 +48,7 @@ jobs:
 
       - name: Summary
         run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "## 🎉 Published to Maven Central!" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "Your library is now available at:" >> $GITHUB_STEP_SUMMARY
@@ -55,6 +56,6 @@ jobs:
           echo "<dependency>" >> $GITHUB_STEP_SUMMARY
           echo "    <groupId>io.github.space0032</groupId>" >> $GITHUB_STEP_SUMMARY
           echo "    <artifactId>java-validation-sanitizer</artifactId>" >> $GITHUB_STEP_SUMMARY
-          echo "    <version>1.0.0</version>" >> $GITHUB_STEP_SUMMARY
+          echo "    <version>${VERSION}</version>" >> $GITHUB_STEP_SUMMARY
           echo "</dependency>" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
