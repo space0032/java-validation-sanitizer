@@ -1,4 +1,7 @@
-# Java Validation and Sanitization Library
+# Java Validation Sanitizer
+
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.space0032/java-validation-sanitizer.svg)](https://search.maven.org/artifact/io.github.space0032/java-validation-sanitizer)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A comprehensive Java library for advanced validation and sanitization that goes beyond what `javax.validation` and Spring Validator provide. This library offers a fluent API for strict sanitization and business-rule validations.
 
@@ -18,11 +21,9 @@ A comprehensive Java library for advanced validation and sanitization that goes 
 
 ### Maven
 
-Add this dependency to your `pom.xml`:
-
 ```xml
 <dependency>
-    <groupId>com.validator</groupId>
+    <groupId>io.github.space0032</groupId>
     <artifactId>java-validation-sanitizer</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -30,8 +31,8 @@ Add this dependency to your `pom.xml`:
 
 ### Gradle
 
-```gradle
-implementation 'com.validator:java-validation-sanitizer:1.0.0'
+```groovy
+implementation 'io.github.space0032:java-validation-sanitizer:1.0.0'
 ```
 
 ## Quick Start
