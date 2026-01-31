@@ -59,6 +59,23 @@ if (!result.isValid()) {
 }
 ```
 
+### Running the Examples
+
+Check out the `examples/ExampleUsage.java` file for comprehensive examples demonstrating:
+- Simple validation
+- Validation with sanitization
+- Real-world user registration
+- Content sanitization (XSS prevention)
+
+To run the examples:
+```bash
+mvn clean compile
+javac -cp "target/classes:$(mvn dependency:build-classpath -q -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout)" \
+  -d /tmp/examples-out examples/ExampleUsage.java
+java -cp "/tmp/examples-out:target/classes:$(mvn dependency:build-classpath -q -DincludeScope=runtime -Dmdep.outputFile=/dev/stdout)" \
+  com.validator.examples.ExampleUsage
+```
+
 ### Validation with Sanitization
 
 ```java
