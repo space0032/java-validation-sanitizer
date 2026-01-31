@@ -49,7 +49,7 @@ class ValidatorsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"invalid", "user@", "@example.com", "user @example.com"})
+    @ValueSource(strings = {"invalid", "user@", "@example.com", "user @example.com", "user@example..com", ".user@example.com", "user.@example.com"})
     void testIsEmailInvalid(String email) {
         ValidatorRule<String> rule = Validators.isEmail();
         assertNotNull(rule.validate("email", email));
@@ -88,6 +88,11 @@ class ValidatorsTest {
         assertNull(rule.validate("ip", "192.168.1.1"));
         assertNull(rule.validate("ip", "0.0.0.0"));
         assertNull(rule.validate("ip", "255.255.255.255"));
+        // IPv6 tests
+        assertNull(rule.validate("ip", "2001:db8::1"));
+        assertNull(rule.validate("ip", "::1"));
+        assertNull(rule.validate("ip", "fe80::1"));
+        assertNull(rule.validate("ip", "2001:0db8:0000:0000:0000:0000:0000:0001"));
     }
 
     @Test

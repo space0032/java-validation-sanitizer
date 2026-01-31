@@ -114,7 +114,21 @@ class SanitizersTest {
         String result = Sanitizers.stripSqlKeywords().sanitize(input);
         // The stripSqlKeywords removes the keywords but may leave other parts
         assertTrue(result.length() < input.length() || !result.toUpperCase().contains("SELECT"));
+        
+        // Test additional keywords
+        assertEquals("", Sanitizers.stripSqlKeywords().sanitize("TRUNCATE"));
+        assertEquals("", Sanitizers.stripSqlKeywords().sanitize("MERGE"));
+        assertEquals(" data", Sanitizers.stripSqlKeywords().sanitize("GRANT data"));
+        
         assertNull(Sanitizers.stripSqlKeywords().sanitize(null));
+    }
+
+    @Test
+    void testStripSqlComments() {
+        assertEquals("SELECT * FROM users ", Sanitizers.stripSqlComments().sanitize("SELECT * FROM users -- comment"));
+        assertEquals("SELECT * FROM users ", Sanitizers.stripSqlComments().sanitize("SELECT * FROM users /* comment */"));
+        assertEquals("SELECT  FROM users", Sanitizers.stripSqlComments().sanitize("SELECT /* inline */ FROM users"));
+        assertNull(Sanitizers.stripSqlComments().sanitize(null));
     }
 
     @Test

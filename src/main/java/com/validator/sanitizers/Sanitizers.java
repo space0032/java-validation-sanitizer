@@ -12,8 +12,12 @@ import java.util.regex.Pattern;
 public class Sanitizers {
 
     private static final Pattern SQL_KEYWORDS = Pattern.compile(
-        "(?i)(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE|UNION|SCRIPT|JAVASCRIPT|ONERROR|ONLOAD)",
+        "(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|EXECUTE|UNION|TRUNCATE|MERGE|GRANT|REVOKE|SCRIPT|JAVASCRIPT|ONERROR|ONLOAD)",
         Pattern.CASE_INSENSITIVE
+    );
+
+    private static final Pattern SQL_COMMENTS = Pattern.compile(
+        "(--.*$|/\\*.*?\\*/)", Pattern.MULTILINE | Pattern.DOTALL
     );
 
     /**
@@ -157,11 +161,28 @@ public class Sanitizers {
 
     /**
      * Removes common SQL injection keywords.
+     * 
+     * <p><strong>WARNING:</strong> This is NOT a secure method to prevent SQL injection.
+     * Always use parameterized queries (PreparedStatement) for database operations.
+     * This sanitizer is intended only as an additional layer of defense.</p>
      */
     public static SanitizerRule stripSqlKeywords() {
         return value -> {
             if (value == null) return null;
             return SQL_KEYWORDS.matcher(value).replaceAll("");
+        };
+    }
+
+    /**
+     * Removes SQL comment patterns (-- and /* *&#47;).
+     * 
+     * <p><strong>WARNING:</strong> This is NOT a secure method to prevent SQL injection.
+     * Always use parameterized queries (PreparedStatement) for database operations.</p>
+     */
+    public static SanitizerRule stripSqlComments() {
+        return value -> {
+            if (value == null) return null;
+            return SQL_COMMENTS.matcher(value).replaceAll("");
         };
     }
 
